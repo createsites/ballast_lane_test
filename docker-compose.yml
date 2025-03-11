@@ -1,0 +1,42 @@
+services:
+    app:
+        build: .
+        container_name: ballast-app
+        ports:
+            - '${APP_PORT:-80}:8000'
+        environment:
+            LARAVEL_DATABASE_TYPE: '${DB_CONNECTION}'
+            LARAVEL_DATABASE_HOST: '${DB_HOST}'
+            LARAVEL_DATABASE_NAME: '${DB_DATABASE}'
+            LARAVEL_DATABASE_USER: '${DB_USERNAME}'
+            LARAVEL_DATABASE_PASSWORD: '${DB_PASSWORD}'
+        volumes:
+            - '.:/app'
+        networks:
+            - ballast
+        depends_on:
+            - mariadb
+    mariadb:
+        image: 'mariadb:11'
+        container_name: ballast-db
+#        ports:
+#            - '${FORWARD_DB_PORT:-3306}:3306'
+        environment:
+            MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+            MYSQL_ROOT_HOST: '%'
+            MYSQL_DATABASE: '${DB_DATABASE}'
+            MYSQL_USER: '${DB_USERNAME}'
+            MYSQL_PASSWORD: '${DB_PASSWORD}'
+            MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+#        volumes:
+#            - 'ballast-mariadb:/var/lib/mysql'
+        networks:
+            - ballast
+networks:
+    ballast:
+        driver: bridge
+        name: ballast-network
+#volumes:
+#    ballast-mariadb:
+#        driver: local
+#        name: ballast-mariadb
