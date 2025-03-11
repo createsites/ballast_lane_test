@@ -2,7 +2,7 @@ FROM php:8.3-fpm
 
 # dependencies install
 RUN apt update \
-    && apt install -y git zip zlib1g-dev libpng-dev \
+    && apt install -y git zip zlib1g-dev libpng-dev default-mysql-client \
     && docker-php-ext-install gd pdo pdo_mysql
 
 # composer install
@@ -17,9 +17,11 @@ RUN composer global require laravel/installer \
 
 WORKDIR /app
 
-COPY .env .
+COPY . .
 
 RUN composer install
+
+RUN chown -R www-data:www-data /app
 
 # dockerize install
 RUN curl -L https://github.com/jwilder/dockerize/releases/download/v0.6.1/dockerize-linux-amd64-v0.6.1.tar.gz -o dockerize-linux-amd64-v0.6.1.tar.gz \
@@ -28,6 +30,8 @@ RUN curl -L https://github.com/jwilder/dockerize/releases/download/v0.6.1/docker
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
+
+USER www-data
 
 EXPOSE 8000
 
