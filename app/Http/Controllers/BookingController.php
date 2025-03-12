@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Booking;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class BookingController extends Controller
 {
@@ -19,15 +22,27 @@ class BookingController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        dd($request->all());
+        return response()->json([], Response::HTTP_CREATED);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Request $request, Booking $booking)
     {
-        //
+        $request->validate([
+            'uuid' => 'uuid',
+        ]);
+
+        try {
+            return response()->json($booking, Response::HTTP_OK);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(
+                ['error' => 'Booking not found'],
+                Response::HTTP_NOT_FOUND
+            );
+        }
     }
 
     /**
@@ -35,7 +50,7 @@ class BookingController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        return response()->json([], Response::HTTP_NO_CONTENT);
     }
 
     /**

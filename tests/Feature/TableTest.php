@@ -8,33 +8,32 @@ uses(RefreshDatabase::class);
 it('can create a table', function () {
     $table = Table::factory()->create([
         'capacity' => 4,
-        'location' => 'Window',
+        'location' => 'London',
     ]);
 
-    expect($table->id)->toBeGreaterThan(0);
+    expect($table->id)->toBeString();
     expect($table->capacity)->toBe(4);
-    expect($table->location)->toBe('Window');
+    expect($table->location)->toBe('London');
 });
 
 it('can update a table', function () {
     $table = Table::factory()->create([
         'capacity' => 4,
-        'location' => 'Window',
+        'location' => 'London',
     ]);
 
     $table->update([
         'capacity' => 6,
-        'location' => 'Center',
+        'location' => 'Los Angeles',
     ]);
 
     $this->assertEquals(6, $table->capacity);
-    $this->assertEquals('Center', $table->location);
+    $this->assertEquals('Los Angeles', $table->location);
 });
 
 it('can delete a table', function () {
     $table = Table::factory()->create();
-
     $table->delete();
 
-    $this->assertDatabaseMissing('tables', ['id' => $table->id]);
+    $this->assertDatabaseMissing($table->getTable(), ['id' => $table->id]);
 });
