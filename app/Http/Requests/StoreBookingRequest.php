@@ -23,7 +23,6 @@ class StoreBookingRequest extends FormRequest
     {
         return [
             'table_id' => 'required|uuid|exists:tables,id',
-            'user_id' => 'required|uuid',
         ];
     }
 }

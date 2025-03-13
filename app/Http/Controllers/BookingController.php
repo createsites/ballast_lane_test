@@ -27,7 +27,12 @@ class BookingController extends Controller
     public function store(StoreBookingRequest $request)
     {
         $validatedData = $request->validated();
-        $booking = Booking::create($validatedData);
+        $booking = Booking::create(
+            array_merge(
+                $validatedData,
+                ['user_id' => auth()->id()]
+            )
+        );
 
         return response()->json($booking, Response::HTTP_CREATED);
     }
