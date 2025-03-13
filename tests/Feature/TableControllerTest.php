@@ -132,16 +132,3 @@ it('allows delete a table', function () {
     $response->assertStatus(204);
     $this->assertDatabaseMissing($table->getTable(), ['id' => $table->id]);
 });
-
-//it('does not allow delete a table from other user', function () {
-//    $user = User::factory()->create();
-//    $table = Table::factory()->create();
-//
-//    $this->actingAs($user, 'sanctum');
-//
-//    $response = $this->deleteJson(
-//        route('tables.destroy', $table)
-//    );
-//
-//    $response->assertStatus(403);
-//});
