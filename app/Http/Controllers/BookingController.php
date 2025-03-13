@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreBookingRequest;
+use App\Http\Requests\UpdateBookingRequest;
 use App\Models\Booking;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Gate;
 
 class BookingController extends Controller
 {
@@ -20,20 +23,18 @@ class BookingController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreBookingRequest $request)
     {
-        dd($request->all());
+//        dd($request->all());
         return response()->json([], Response::HTTP_CREATED);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Request $request, Booking $booking)
+    public function show(Booking $booking)
     {
-        $request->validate([
-            'uuid' => 'uuid',
-        ]);
+        Gate::authorize('view', $booking);
 
         try {
             return response()->json($booking, Response::HTTP_OK);
@@ -48,9 +49,13 @@ class BookingController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateBookingRequest $request, string $id)
     {
-        return response()->json([], Response::HTTP_NO_CONTENT);
+        $booking = Booking::findOrFail($id);
+        $validatedData = $request->validated();
+        $booking->update($validatedData);
+
+        return response()->json($booking, Response::HTTP_OK);
     }
 
     /**

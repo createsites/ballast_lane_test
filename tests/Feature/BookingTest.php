@@ -18,17 +18,14 @@ it('can update a booking', function () {
     $user = User::factory()->create();
     $table = Table::factory()->create();
     $booking = Booking::factory()->create();
-    $now = now();
 
     $booking->update([
         'user_id' => $user->id,
         'table_id' => $table->id,
-        'booking_time' => $now,
     ]);
 
     expect($booking->user_id)->toEqual($user->id);
     expect($booking->table_id)->toEqual($table->id);
-    expect($booking->booking_time)->toEqual($now);
 });
 
 it('can delete a booking', function () {

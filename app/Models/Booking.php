@@ -14,7 +14,6 @@ class Booking extends Model
     protected $fillable = [
         'user_id',
         'table_id',
-        'booking_time',
     ];
 
     public function table(): BelongsTo

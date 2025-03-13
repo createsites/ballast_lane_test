@@ -21,7 +21,6 @@ class BookingFactory extends Factory
         return [
             'user_id' => User::factory(),
             'table_id' => Table::factory(),
-            'booking_time' => $this->faker->dateTimeBetween('now', '+1 week'),
         ];
     }
 }
