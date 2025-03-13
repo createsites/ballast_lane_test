@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreBookingRequest;
 use App\Http\Requests\UpdateBookingRequest;
 use App\Models\Booking;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 
@@ -17,7 +15,10 @@ class BookingController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(
+            auth()->user()->bookings,
+            Response::HTTP_OK
+        );
     }
 
     /**
@@ -25,8 +26,10 @@ class BookingController extends Controller
      */
     public function store(StoreBookingRequest $request)
     {
-//        dd($request->all());
-        return response()->json([], Response::HTTP_CREATED);
+        $validatedData = $request->validated();
+        $booking = Booking::create($validatedData);
+
+        return response()->json($booking, Response::HTTP_CREATED);
     }
 
     /**
@@ -34,24 +37,16 @@ class BookingController extends Controller
      */
     public function show(Booking $booking)
     {
-        Gate::authorize('view', $booking);
+        Gate::authorize('owner', $booking);
 
-        try {
-            return response()->json($booking, Response::HTTP_OK);
-        } catch (ModelNotFoundException $e) {
-            return response()->json(
-                ['error' => 'Booking not found'],
-                Response::HTTP_NOT_FOUND
-            );
-        }
+        return response()->json($booking, Response::HTTP_OK);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateBookingRequest $request, string $id)
+    public function update(UpdateBookingRequest $request,  Booking $booking)
     {
-        $booking = Booking::findOrFail($id);
         $validatedData = $request->validated();
         $booking->update($validatedData);
 
@@ -61,8 +56,12 @@ class BookingController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Booking $booking)
     {
-        //
+        Gate::authorize('owner', $booking);
+
+        $booking->delete();
+
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Booking;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
@@ -13,8 +12,9 @@ class UpdateBookingRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        $booking = Booking::findOrFail($this->route('booking'));
-        Gate::authorize('view', $booking);
+        $booking = $this->route('booking');
+
+        Gate::authorize('owner', $booking);
 
         return true;
     }
@@ -28,6 +28,7 @@ class UpdateBookingRequest extends FormRequest
     {
         return [
             'table_id' => 'uuid',
+            'user_id' => 'prohibited',
         ];
     }
 }

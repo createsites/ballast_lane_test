@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Booking;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Gate;
 
 class StoreBookingRequest extends FormRequest
 {
@@ -13,9 +11,6 @@ class StoreBookingRequest extends FormRequest
      */
     public function authorize(): bool
     {
-//        $booking = Booking::findOrFail($this->route('booking'));
-//        Gate::authorize('view', $booking);
-
         return true;
     }
 
@@ -28,7 +23,7 @@ class StoreBookingRequest extends FormRequest
     {
         return [
             'table_id' => 'required|uuid',
-//            'user_id',
+            'user_id' => 'required|uuid',
         ];
     }
 }
