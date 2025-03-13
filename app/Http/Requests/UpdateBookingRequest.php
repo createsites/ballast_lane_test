@@ -27,7 +27,7 @@ class UpdateBookingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'table_id' => 'uuid',
+            'table_id' => 'uuid|exists:tables,id',
             'user_id' => 'prohibited',
         ];
     }

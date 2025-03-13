@@ -22,7 +22,7 @@ class StoreBookingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'table_id' => 'required|uuid',
+            'table_id' => 'required|uuid|exists:tables,id',
             'user_id' => 'required|uuid',
         ];
     }

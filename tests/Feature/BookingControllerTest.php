@@ -32,6 +32,33 @@ it('requires auth for deleting the booking', function () {
     $response->assertStatus(401);
 });
 
+it('can create a booking', function () {
+    $user = User::factory()->create();
+    $table = Table::factory()->create();
+
+    $this->actingAs($user, 'sanctum');
+
+    $response = $this->postJson(route('bookings.store'), [
+        'table_id' => $table->id,
+        'user_id' => $user->id,
+    ]);
+
+    $response->assertStatus(201);
+});
+
+it('can not create a booking with a non existing table', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user, 'sanctum');
+
+    $response = $this->postJson(route('bookings.store'), [
+        'table_id' => 'not_exists',
+        'user_id' => $user->id,
+    ]);
+
+    $response->assertStatus(422);
+});
+
 it('can retrieve all bookings of current user', function () {
     $user = User::factory()->create();
     Booking::factory()->count(3)->create(['user_id' => $user->id]);
