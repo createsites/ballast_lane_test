@@ -1,5 +1,13 @@
 # Ballast lane test project
 
+This is an application for booking tables in restaurants.
+There are three models in the system: user, table and booking.
+Authorized users can manage tables and bookings.
+A booking exists only with a table, a many-to-one relationship.
+Also, a booking has a many-to-one relationship with a user.
+Tables exist separately and are linked to a booking when it is created.
+You can find the API documentation below.
+
 The project uses Docker, before you start, you **must** create a .env file (it's important).
 You can simply copy .env.example.
 
